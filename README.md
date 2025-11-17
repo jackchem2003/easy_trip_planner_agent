@@ -145,8 +145,3 @@ Then open: http://localhost:8080/docs
 If you'd like, I can:
 - add a quick `docker-compose.yml` to start Ollama + ADK agent together 🤝
 - implement a minimal Locust test for basic throughput checks 🧪
-
----
-
-Made with ❤️ and a bit of AI magic ✨
-
