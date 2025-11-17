@@ -1,4 +1,4 @@
-# � Accelerate AI — Lab 3 Starter
+# Smart Travel Assistant
 
 A minimal starter repository for a GPU-accelerated ADK-based agent ("Smart Travel Assistant") using Gemma/LiteLlm + Ollama and a Google Maps MCP toolset. This README explains the structure, how to run locally with Docker or Python, environment variables, and useful notes. ✨
 
