@@ -1,0 +1,53 @@
+
+gcloud config set project gcpblogmarathon17nov
+
+
+
+gcloud services enable \
+  run.googleapis.com \
+  artifactregistry.googleapis.com \
+  cloudbuild.googleapis.com \
+  aiplatform.googleapis.com
+
+  gcloud config set run/region europe-west1
+
+
+  cd ~
+git clone https://github.com/jackchem2003/easy_trip_planner_agent.git
+cd easy_trip_planner_agent
+
+ls -R
+
+cd ollama-backend
+
+
+gcloud run deploy ollama-gemma3-270m-gpu \
+  --source . \
+  --region europe-west1 \
+  --concurrency 7 \
+  --cpu 8 \
+  --set-env-vars OLLAMA_NUM_PARALLEL=4 \
+  --gpu 1 \
+  --gpu-type nvidia-l4 \
+  --max-instances 1 \
+  --memory 16Gi \
+  --allow-unauthenticated \
+  --no-cpu-throttling \
+  --no-gpu-zonal-redundancy \
+  --timeout 600 \
+  --labels dev-tutorial=codelab-agent-gpu
+
+
+cat << EOF > .env
+GOOGLE_CLOUD_PROJECT=$(gcloud config get-value project)
+GOOGLE_CLOUD_LOCATION=europe-west1
+GEMMA_MODEL_NAME=gemma3:270m
+OLLAMA_API_BASE=$OLLAMA_URL
+EOF
+
+export AGENT_URL=$(gcloud run services describe production-adk-agent \
+    --region=europe-west1 \
+    --format='value(status.url)')
+
+
+curl $AGENT_URL/health

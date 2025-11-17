@@ -1,11 +1,12 @@
 import os
 from pathlib import Path
-
 from dotenv import load_dotenv
 from google.adk.agents import Agent, Dispatcher
 from google.adk.models.lite_llm import LiteLlm
 from production_agent.google_maps_tool import google_maps_tool
 import google.auth
+import logging
+from google.auth.exceptions import DefaultCredentialsError
 
 # Load environment variables
 root_dir = Path(__file__).parent.parent
@@ -16,8 +17,14 @@ load_dotenv(dotenv_path=dotenv_path)
 try:
     _, project_id = google.auth.default()
     os.environ.setdefault("GOOGLE_CLOUD_PROJECT", project_id)
+except DefaultCredentialsError:
+    logging.warning(
+        "Google application default credentials not found. "
+        "Set up ADC with 'gcloud auth application-default login' or provide a service account key and set the "
+        "environment variable GOOGLE_APPLICATION_CREDENTIALS. See: https://cloud.google.com/docs/authentication/external/set-up-adc"
+    )
 except Exception:
-    pass
+    logging.exception("Unexpected error while obtaining default credentials")
 
 os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "europe-west1")
 
